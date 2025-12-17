@@ -1,0 +1,18 @@
+_target_: pytorch_lightning.Trainer
+max_epochs: 300
+accelerator: "auto"
+log_every_n_steps: 15
+# precision: 16
+enable_checkpointing: True
+
+callbacks: 
+  - _target_: pytorch_lightning.callbacks.EarlyStopping
+    monitor: val_loss
+    mode: "min"
+    patience: 15
+  - _target_: pytorch_lightning.callbacks.ModelCheckpoint
+    monitor: val_loss
+    mode: "min"
+    save_top_k: 1
+    dirpath: ./${output_dir}/checkpoints
+    filename: ${now:%Y-%m-%d_%H-%M-%S}-epoch={epoch}-val_loss={val_loss:.4f}
