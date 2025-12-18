@@ -1,0 +1,35 @@
+_target_: models.Model
+
+model:
+  _target_: models.WaveletUNet
+  in_channels: 3
+  out_classes: 1
+  stem_dim: 32
+  depth: 4
+  head: segmentation
+
+scheduler:
+  _target_: optim.lr_scheduler.CosineAnnealingWithWarmupLR
+  warmup_epoch: 10
+  decay_epoch: 300
+  eta_min_ratio: 0.1
+
+optimizer:
+  _target_: torch.optim.AdamW
+  lr: 0.001
+  weight_decay: 0.01
+
+loss:
+  _target_: metrics.ComposeLoss
+  losses:
+    - - _target_: torch.nn.BCEWithLogitsLoss
+        pos_weight:
+          _target_: torch.tensor
+          data: [20.0]
+      - 1.0
+    - - _target_: metrics.DiceLoss
+      - 0.5
+  
+metrics:
+  dice:
+    _target_: metrics.DiceLoss

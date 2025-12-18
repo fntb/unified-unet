@@ -1,0 +1,4 @@
+_target_: data.KvasirDataModule
+batch_size: 16
+data_dir: "~/datasets/kvasir/kvasir-seg"
+num_workers: 4

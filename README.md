@@ -1,5 +1,5 @@
 
-# UNet
+# Unified UNet
 
 _This is a **WIP**._
 
@@ -12,6 +12,11 @@ We aim to implement
 - a Haar Wavelet Residual UNet on complex geometry _(e.g. a sphere rather than a 2d square image)_ ;
 - a Haar Wavelet Residual UNet with an enforced functionnal constraint _(e.g. conservation laws in weather simulation)_.
 
+Currently implemented :
+
+- basic UNet for classification and segmentation (mnist and kvasir) ;
+- wavelet Unet for classification and segmentation (mnist and kvasir).
+
 ## Quick Start
 
 We use the `uv` package and project manager and the `torch` - `lightning` - `hydra` framework.
@@ -21,6 +26,3 @@ Run the demo with
 ```bash
 uv run src/main.py
 ```
-
-_Currently just doing MNIST with a classification head on a base (very lightweight) UNet to ensure the setup is working properly._
-

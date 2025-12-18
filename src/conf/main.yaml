@@ -1,7 +1,7 @@
 defaults:
   - _self_
-  - model: unet
-  - data: mnist
+  - model: wavelet_unet_segmentation
+  - data: kvasir
   - trainer: base
 
 output_dir: .cache
