@@ -1,14 +1,14 @@
 defaults:
   - _self_
-  - model: wavelet_unet_segmentation
-  - data: kvasir
   - trainer: base
+  - task: segmentation
 
 output_dir: .cache
+output_id: ${now:%Y-%m-%d_%H-%M-%S}
 
 hydra:
   run:
-    dir: ./${output_dir}/experiments/runs/${now:%Y-%m-%d_%H-%M-%S}
+    dir: ./${output_dir}/experiments/runs/${output_id}
   sweep:
-    dir: ./${output_dir}/experiments/multiruns/${now:%Y-%m-%d_%H-%M-%S}
+    dir: ./${output_dir}/experiments/multiruns/${output_id}
     subdir: ${hydra.job.override_dirname}

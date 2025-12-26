@@ -1,0 +1,28 @@
+# @package _global_
+defaults:
+  - /model: wavelet_unet
+  - /data: mnist
+
+model:
+  model:
+    head: classification
+
+  loss:
+    _target_: torch.nn.CrossEntropyLoss
+
+  metrics:
+    accuracy:
+      _target_: metrics.Accuracy
+  
+trainer:
+  callbacks: 
+    - _target_: pytorch_lightning.callbacks.EarlyStopping
+      monitor: val_accuracy
+      mode: "min"
+      patience: 15
+    - _target_: pytorch_lightning.callbacks.ModelCheckpoint
+      monitor: val_accuracy
+      mode: "min"
+      save_top_k: 1
+      dirpath: ./${output_dir}/checkpoints
+      filename: ${now:%Y-%m-%d_%H-%M-%S}-epoch={epoch}-val_accuracy={val_accuracy:.4f}

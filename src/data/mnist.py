@@ -2,6 +2,8 @@ import torch
 import torchvision
 import pytorch_lightning as pl
 
+from .prediction_dataset import PredictionDatasetWrapper
+
 class MNISTDataModule(pl.LightningDataModule):
 
     def __init__(self, data_dir: str, batch_size: int, seed: int = 0, num_workers: int = 1):
@@ -30,13 +32,13 @@ class MNISTDataModule(pl.LightningDataModule):
 
     def setup(self, stage: str):
         if stage == "fit":
-            base_mnist_dataset = torchvision.datasets.MNIST(
+            full_dataset = torchvision.datasets.MNIST(
                 self.data_dir,
                 train=True,
             )
 
             train_dataset, val_dataset = torch.utils.data.random_split(
-                base_mnist_dataset,
+                full_dataset,
                 [0.9, 0.1],
                 generator=torch.Generator().manual_seed(self.seed)
             )
@@ -66,14 +68,23 @@ class MNISTDataModule(pl.LightningDataModule):
                 transform=self.val_test_transform
             )
 
+        elif stage == "predict":
+            test_dataset = torchvision.datasets.MNIST(
+                self.data_dir,
+                train=False,
+                transform=self.val_test_transform
+            )
+
+            self.predict_dataset = PredictionDatasetWrapper(test_dataset)
+
     def train_dataloader(self):
-        return torch.utils.data.DataLoader(self.train_dataset, batch_size=self.batch_size, num_workers=self.num_workers)
+        return torch.utils.data.DataLoader(self.train_dataset, batch_size=self.batch_size, num_workers=self.num_workers, shuffle=True)
 
     def val_dataloader(self):
-        return torch.utils.data.DataLoader(self.val_dataset, batch_size=self.batch_size)
+        return torch.utils.data.DataLoader(self.val_dataset, batch_size=self.batch_size, num_workers=max(1, self.num_workers // 2))
 
     def test_dataloader(self):
-        return torch.utils.data.DataLoader(self.test_dataset, batch_size=self.batch_size)
+        return torch.utils.data.DataLoader(self.test_dataset, batch_size=self.batch_size, num_workers=self.num_workers)
 
-    def teardown(self, stage: str):
-        ...
+    def predict_dataloader(self):
+        return torch.utils.data.DataLoader(self.predict_dataset, batch_size=self.batch_size, num_workers=self.num_workers)

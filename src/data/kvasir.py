@@ -8,6 +8,8 @@ from torchvision.transforms import v2
 
 import pytorch_lightning as pl
 
+from .prediction_dataset import PredictionDatasetWrapper
+
 class KvasirDataset(Dataset):
     def __init__(self, data_dir, transform = None):
         data_dir = os.path.abspath(os.path.expanduser(data_dir))
@@ -74,13 +76,16 @@ class KvasirDataModule(pl.LightningDataModule):
         self.train_dataset = torch.utils.data.Subset(train_dataset, train_indices)
         self.val_dataset = torch.utils.data.Subset(val_test_dataset, val_indices)
         self.test_dataset = torch.utils.data.Subset(val_test_dataset, test_indices)
+        self.predict_dataset = PredictionDatasetWrapper(self.test_dataset)
 
     def train_dataloader(self):
-        return torch.utils.data.DataLoader(self.train_dataset, batch_size=self.batch_size, num_workers=self.num_workers)
+        return torch.utils.data.DataLoader(self.train_dataset, batch_size=self.batch_size, num_workers=self.num_workers, shuffle=True)
 
     def val_dataloader(self):
         return torch.utils.data.DataLoader(self.val_dataset, batch_size=self.batch_size, num_workers=max(1, self.num_workers // 2))
 
     def test_dataloader(self):
-        return torch.utils.data.DataLoader(self.test_dataset, batch_size=self.batch_size, num_workers=max(1, self.num_workers // 2))
+        return torch.utils.data.DataLoader(self.test_dataset, batch_size=self.batch_size, num_workers=self.num_workers)
 
+    def predict_dataloader(self):
+        return torch.utils.data.DataLoader(self.predict_dataset, batch_size=self.batch_size, num_workers=self.num_workers)

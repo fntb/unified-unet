@@ -79,6 +79,16 @@ class Model(pl.LightningModule):
             metrics[f"test_{metric_name}"] = metric
 
         return metrics
+    
+    def predict_step(self, batch, batch_idx, dataloader_idx=0):
+        x = batch 
+        
+        y_hat = self(x) 
+    
+        if y_hat.shape[1] == 1:
+            return (torch.sigmoid(y_hat) > 0.5).int()
+        else:
+            return torch.argmax(y_hat, dim=1)
 
     def configure_optimizers(self):
         optimizer = instantiate(self.optimizer_conf, params=self.parameters()) if self.optimizer_conf is not None else None

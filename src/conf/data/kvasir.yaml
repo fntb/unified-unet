@@ -1,4 +1,9 @@
-_target_: data.KvasirDataModule
-batch_size: 16
-data_dir: "~/datasets/kvasir/kvasir-seg"
-num_workers: 4
+
+datamodule:
+  _target_: data.KvasirDataModule
+  batch_size: 16
+  data_dir: "~/datasets/kvasir/kvasir-seg"
+  num_workers: 4
+
+in_channels: 3
+out_classes: 1

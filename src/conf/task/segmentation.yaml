@@ -1,0 +1,39 @@
+# @package _global_
+defaults:
+  - /model: wavelet_unet
+  - /data: kvasir
+  - _self_
+
+model:
+  model:
+    stem_dim: 32
+    depth: 5
+    head: segmentation
+
+  loss:
+    _target_: metrics.ComposeLoss
+    losses:
+      - - _target_: torch.nn.BCEWithLogitsLoss
+          pos_weight:
+            _target_: torch.tensor
+            data: [20.0]
+        - 1.0
+      - - _target_: metrics.DiceLoss
+        - 0.5
+
+  metrics:
+    dice:
+      _target_: metrics.DiceLoss
+
+trainer:
+  callbacks: 
+    - _target_: pytorch_lightning.callbacks.EarlyStopping
+      monitor: val_dice
+      mode: "min"
+      patience: 15
+    - _target_: pytorch_lightning.callbacks.ModelCheckpoint
+      monitor: val_dice
+      mode: "min"
+      save_top_k: 1
+      dirpath: ./${output_dir}/checkpoints
+      filename: ${now:%Y-%m-%d_%H-%M-%S}-epoch={epoch}-val_dice={val_dice:.4f}

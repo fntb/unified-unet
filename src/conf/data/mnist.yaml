@@ -1,4 +1,9 @@
-_target_: data.mnist.MNISTDataModule
-batch_size: 512
-data_dir: "${output_dir}/data"
-num_workers: 8
+
+datamodule:
+  _target_: data.mnist.MNISTDataModule
+  batch_size: 512
+  data_dir: "${output_dir}/data"
+  num_workers: 8
+
+in_channels: 1
+out_classes: 10

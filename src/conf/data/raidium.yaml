@@ -1,0 +1,9 @@
+
+datamodule:
+  _target_: datasets.RaidiumDataModule
+  batch_size: 8
+  data_dir: "~/datasets/raidium"
+  num_workers: 4
+
+in_channels: 1
+out_classes: 55

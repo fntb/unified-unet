@@ -2,11 +2,10 @@ _target_: models.Model
 
 model:
   _target_: models.WaveletUNet
-  in_channels: 1
-  out_classes: 10
+  in_channels: ${data.in_channels}
+  out_classes: ${data.out_classes}
   stem_dim: 8
   depth: 3
-  head: classification
 
 scheduler:
   _target_: optim.lr_scheduler.CosineAnnealingWithWarmupLR
@@ -18,10 +17,3 @@ optimizer:
   _target_: torch.optim.AdamW
   lr: 0.001
   weight_decay: 0.01
-
-loss:
-  _target_: torch.nn.CrossEntropyLoss
-
-metrics:
-  accuracy:
-    _target_: metrics.Accuracy
