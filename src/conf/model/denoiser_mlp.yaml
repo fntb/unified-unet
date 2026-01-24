@@ -1,0 +1,25 @@
+# conf/model/denoiser_mlp.yaml
+_target_: models.RegressionModel
+
+model:
+  _target_: models.DenoiserOperator
+  mode: baseline            # baseline | residual | preconditioned
+  preconditioner: none      # none | identity | ma
+  ma_kernel_size: 9
+
+  net:
+    _target_: models.MLPResNet
+    input_dim: ${data.d}
+    output_dim: ${data.d}
+    hidden_dim: 128
+    depth: 4
+    dropout: 0.0
+    use_layernorm: true
+
+loss:
+  _target_: torch.nn.MSELoss
+
+optimizer:
+  _target_: torch.optim.AdamW
+  lr: 0.001
+  weight_decay: 0.01

@@ -1,0 +1,28 @@
+datamodule:
+  _target_: data.signal_1d.Signal1DDataModule
+
+  # Dataloader
+  batch_size: 256
+  num_workers: 4
+  pin_memory: false
+  persistent_workers: false
+
+  # Dataset sizes
+  n_train: 20000
+  n_val: 5000
+  n_test: 5000
+
+  # Signal parameters
+  L: 512
+  sigma_noise: 0.2
+
+  # Signal composition
+  use_steps: true
+  use_spikes: true
+  do_standardize: true
+
+  # Reproducibility
+  seed: 0
+
+# Metadata used by models
+d: 512
