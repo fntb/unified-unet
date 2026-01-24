@@ -7,22 +7,43 @@ datamodule:
   pin_memory: false
   persistent_workers: false
 
-  # Dataset sizes
-  n_train: 20000
-  n_val: 5000
+  # Dataset sizes (important: pas trop grand pour voir les différences)
+  n_train: 5000
+  n_val: 2000
   n_test: 5000
-
-  # Signal parameters
-  L: 512
-  sigma_noise: 0.2
-
-  # Signal composition
-  use_steps: true
-  use_spikes: true
-  do_standardize: true
 
   # Reproducibility
   seed: 0
+
+  # Signal parameters (match Signal1DConfig)
+  L: 512
+  sigma_noise: 0.35
+  do_standardize: true
+
+  use_steps: true
+  use_spikes: true
+
+  # Multi-frequency
+  n_sines_min: 4
+  n_sines_max: 10
+  f_min: 1.0
+  f_max: 80.0
+  amp_sine_min: 0.2
+  amp_sine_max: 1.2
+
+  # Steps harder
+  n_steps_min: 1
+  n_steps_max: 6
+  step_amp_min: -1.5
+  step_amp_max: 1.5
+
+  # Spikes harder (narrower)
+  n_spikes_min: 2
+  n_spikes_max: 10
+  spike_amp_min: 0.6
+  spike_amp_max: 2.5
+  spike_width_min: 0.002
+  spike_width_max: 0.015
 
 # Metadata used by models
 d: 512

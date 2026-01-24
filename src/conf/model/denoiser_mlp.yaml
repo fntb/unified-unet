@@ -1,14 +1,15 @@
 # conf/model/denoiser_mlp.yaml
-_target_: models.RegressionModel
+_target_: src.models.regression_model.RegressionModel
 
 model:
-  _target_: models.DenoiserOperator
-  mode: baseline            # baseline | residual | preconditioned
-  preconditioner: none      # none | identity | ma
+  _target_: src.models.regressors.DenoiserOperator
+  mode: baseline                 # baseline | residual | preconditioned
+  preconditioner: haar           # none | identity | ma | haar
   ma_kernel_size: 9
+  haar_levels: 2
 
   net:
-    _target_: models.MLPResNet
+    _target_: src.models.regressors.MLPResNet
     input_dim: ${data.d}
     output_dim: ${data.d}
     hidden_dim: 128

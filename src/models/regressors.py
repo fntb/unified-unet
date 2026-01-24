@@ -7,8 +7,7 @@ from typing import Optional, Literal
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-
-
+from .wavelet_1d import haar_lowpass_multilevel
 
 # 1) Backbone: Residual MLP (ResNet-style)
 
@@ -82,7 +81,7 @@ def moving_average_1d(y: torch.Tensor, kernel_size: int = 9) -> torch.Tensor:
 
 
 # 3) Single configurable operator: baseline / residual / preconditioned
-PrecondType = Literal["none", "identity", "ma"]
+PrecondType = Literal["none", "identity", "ma", "haar"]
 
 class DenoiserOperator(nn.Module):
     """
@@ -93,18 +92,18 @@ class DenoiserOperator(nn.Module):
     where f is the same backbone (MLPResNet by default).
     """
 
-    def __init__(
-        self,
+    def __init__(self,
         net: nn.Module,
         mode: Literal["baseline", "residual", "preconditioned"] = "baseline",
         preconditioner: PrecondType = "none",
         ma_kernel_size: int = 9,
-    ):
+        haar_levels: int = 3,):
         super().__init__()
         self.net = net
         self.mode = mode
         self.preconditioner = preconditioner
         self.ma_kernel_size = int(ma_kernel_size)
+        self.haar_levels = int(haar_levels)
 
     def P(self, y: torch.Tensor) -> torch.Tensor:
         if self.preconditioner == "none":
@@ -114,6 +113,8 @@ class DenoiserOperator(nn.Module):
             return y
         if self.preconditioner == "ma":
             return moving_average_1d(y, kernel_size=self.ma_kernel_size)
+        if self.preconditioner == "haar":
+            return haar_lowpass_multilevel(y, levels=self.haar_levels)
         raise ValueError(f"Unknown preconditioner: {self.preconditioner}")
 
     def forward(self, y: torch.Tensor) -> torch.Tensor:
