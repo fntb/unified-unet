@@ -4,9 +4,9 @@ _target_: src.models.regression_model.RegressionModel
 model:
   _target_: src.models.regressors.DenoiserOperator
   mode: baseline                 # baseline | residual | preconditioned
-  preconditioner: haar           # none | identity | ma | haar
+  preconditioner: none           # none | identity | ma | haar
   ma_kernel_size: 9
-  haar_levels: 2
+  haar_levels: 3
 
   net:
     _target_: src.models.regressors.MLPResNet

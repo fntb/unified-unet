@@ -15,9 +15,7 @@ from pytorch_lightning.loggers import CSVLogger
 @hydra.main(config_path="conf", config_name="main", version_base=None)
 def main(conf: DictConfig):
 
-    # =========================
     # Reproducibility (global)
-    # =========================
     seed = int(conf.get("seed", 0))
     pl.seed_everything(seed, workers=True)
     random.seed(seed)
@@ -34,23 +32,17 @@ def main(conf: DictConfig):
 
     print(OmegaConf.to_yaml(conf))
 
-    # =========================
     # Build objects from Hydra
-    # =========================
     data_module = cast(pl.LightningDataModule, instantiate(conf.data.datamodule, _recursive_=False))
     model_module = instantiate(conf.model, _recursive_=False)
 
     csv_logger = CSVLogger(save_dir=conf.output_dir)
     trainer = cast(pl.Trainer, instantiate(conf.trainer, logger=csv_logger))
 
-    # =========================
     # Train
-    # =========================
     trainer.fit(model_module, data_module)
 
-    # =========================
     # Test with best checkpoint(s)
-    # =========================
     checkpoint_callbacks = [
         cb for cb in trainer.checkpoint_callbacks
         if isinstance(cb, ModelCheckpoint)
@@ -59,9 +51,7 @@ def main(conf: DictConfig):
     for cb in checkpoint_callbacks:
         trainer.test(datamodule=data_module, ckpt_path=cb.best_model_path, weights_only=False)
 
-    # =========================
     # Save predictions (optional)
-    # =========================
     if data_module.test_dataloader is not None:
         for cb in checkpoint_callbacks:
             preds = trainer.predict(datamodule=data_module, ckpt_path=cb.best_model_path, weights_only=False)

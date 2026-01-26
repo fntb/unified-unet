@@ -1,15 +1,20 @@
 # conf/trainer/base.yaml
 _target_: pytorch_lightning.Trainer
 
-max_epochs: 10
+max_epochs: 25
 accelerator: "auto"
 log_every_n_steps: 10
+
+# Validation cadence
+check_val_every_n_epoch: 1
+limit_val_batches: 1.0
 
 # Reproducibility
 deterministic: true
 benchmark: false
 
 enable_checkpointing: True
+enable_progress_bar: true
 
 callbacks:
   - _target_: pytorch_lightning.callbacks.ModelCheckpoint
@@ -26,5 +31,5 @@ callbacks:
   - _target_: pytorch_lightning.callbacks.EarlyStopping
     monitor: val_loss
     mode: "min"
-    patience: 8
+    patience: 3
 
