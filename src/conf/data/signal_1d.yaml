@@ -20,12 +20,12 @@ datamodule:
   use_spikes: true
 
   # Sines
-  sines_n_min: 6
-  sines_n_max: 16
+  sines_n_min: 10
+  sines_n_max: 25
   sines_f_min: 1.0
-  sines_f_max: 60.0
-  sines_amp_min: 0.4
-  sines_amp_max: 1.2
+  sines_f_max: 120.0
+  sines_amp_min: 0.3
+  sines_amp_max: 1.3
 
   # Steps
   steps_n_min: 1
@@ -34,21 +34,21 @@ datamodule:
   steps_amp_max: 0.6
 
   # Spikes (clean)
-  spikes_n_min: 1
-  spikes_n_max: 6
+  spikes_n_min: 3
+  spikes_n_max: 10
   spikes_amp_min: 0.2
-  spikes_amp_max: 0.8
-  spikes_width_min: 0.003
-  spikes_width_max: 0.05
+  spikes_amp_max: 0.9
+  spikes_width_min: 0.001
+  spikes_width_max: 0.02
 
   # Noise
-  sigma_noise_min: 0.05
-  sigma_noise_max: 0.60
+  sigma_noise_min: 0.15
+  sigma_noise_max: 1.00
 
-  impulsive_prob_min: 0.00
-  impulsive_prob_max: 0.10
-  impulsive_amp_min: 0.8
-  impulsive_amp_max: 3.0
+  impulsive_prob_min: 0.05
+  impulsive_prob_max: 0.20
+  impulsive_amp_min: 1.0
+  impulsive_amp_max: 5.0
 
   # Normalization
   do_standardize: true
