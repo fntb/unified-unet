@@ -74,10 +74,8 @@ class Signal1DConfig:
     do_standardize: bool = True
 
 
-# -------------------------
-# Small helpers (deterministic sampling)
-# -------------------------
 
+# Small helpers (deterministic sampling)
 def _rand_uniform(rng: torch.Generator, a: float, b: float) -> float:
     return float(a + (b - a) * torch.rand((), generator=rng).item())
 
@@ -95,9 +93,7 @@ def make_time_grid(L: int, device: Optional[torch.device] = None) -> torch.Tenso
     return torch.linspace(0.0, 1.0, L, device=device, dtype=torch.float32)
 
 
-# -------------------------
 # Clean signal components
-# -------------------------
 
 def sines_component(
     t: torch.Tensor,
@@ -167,9 +163,8 @@ def spikes_component(
     return x
 
 
-# -------------------------
+
 # Noise models
-# -------------------------
 
 def add_gaussian_noise(x: torch.Tensor, rng: torch.Generator, sigma: float) -> torch.Tensor:
     # Generate on CPU for full determinism, then move to device.
@@ -208,9 +203,8 @@ def add_impulsive_noise(
     return x + spikes_cpu.to(x.device, dtype=x.dtype)
 
 
-# -------------------------
+
 # Sample generation
-# -------------------------
 
 def generate_pair(
     cfg: Signal1DConfig,
@@ -301,9 +295,8 @@ def generate_pair(
     return x, y, components
 
 
-# -------------------------
+
 # Dataset
-# -------------------------
 
 class Signal1DDataset(Dataset):
     """
@@ -325,9 +318,7 @@ class Signal1DDataset(Dataset):
         return y, x
 
 
-# -------------------------
 # Lightning DataModule
-# -------------------------
 
 class Signal1DDataModule(pl.LightningDataModule):
     def __init__(
