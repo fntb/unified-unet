@@ -92,6 +92,16 @@ class Model(pl.LightningModule):
 
     def configure_optimizers(self):
         optimizer = instantiate(self.optimizer_conf, params=self.parameters()) if self.optimizer_conf is not None else None
-        scheduler = instantiate(self.scheduler_conf, optimizer=optimizer) if self.scheduler_conf is not None else None
+        if optimizer is None:
+            raise ValueError("Optimizer config is missing (optimizer_conf is None).")
 
-        return [optimizer], [scheduler]
+        # No scheduler
+        if self.scheduler_conf is None:
+            return optimizer
+
+        scheduler = instantiate(self.scheduler_conf, optimizer=optimizer)
+        return {
+            "optimizer": optimizer,
+            "lr_scheduler": scheduler,
+        }
+

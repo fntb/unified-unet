@@ -1,7 +1,9 @@
 defaults:
   - _self_
   - trainer: base
-  - task: segmentation
+  - task@_global_: segmentation
+
+seed : 0
 
 output_dir: .cache
 output_id: ${now:%Y-%m-%d_%H-%M-%S}
