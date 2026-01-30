@@ -87,3 +87,4 @@ def plot_val_loss_overlay(run_version: dict, log_dir: str):
     plt.legend()
     plt.tight_layout()
     plt.show()
+    

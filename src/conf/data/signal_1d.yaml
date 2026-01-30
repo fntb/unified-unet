@@ -1,60 +1,51 @@
 datamodule:
   _target_: src.data.signal_1d.Signal1DDataModule
 
-  # Dataloader
   batch_size: 256
-  num_workers: 4
+  num_workers: 0
   pin_memory: false
   persistent_workers: false
 
-  # Dataset sizes
   n_train: 20000
   n_val: 5000
   n_test: 5000
 
-  # Signal length
   L: 512
 
-  # Clean signal composition
   use_steps: true
   use_spikes: true
 
-  # Sines
-  sines_n_min: 10
-  sines_n_max: 25
+  # Clean: limiter les HF "ambiguës"
+  sines_n_min: 6
+  sines_n_max: 12
   sines_f_min: 1.0
-  sines_f_max: 120.0
+  sines_f_max: 35.0
   sines_amp_min: 0.3
   sines_amp_max: 1.3
 
-  # Steps
   steps_n_min: 1
-  steps_n_max: 4
+  steps_n_max: 3
   steps_amp_min: -0.6
   steps_amp_max: 0.6
 
-  # Spikes (clean)
-  spikes_n_min: 3
-  spikes_n_max: 10
+  # Spikes clean: moins "impulsif-like"
+  spikes_n_min: 2
+  spikes_n_max: 6
   spikes_amp_min: 0.2
-  spikes_amp_max: 0.9
-  spikes_width_min: 0.001
-  spikes_width_max: 0.02
+  spikes_amp_max: 0.8
+  spikes_width_min: 0.006
+  spikes_width_max: 0.03
 
-  # Noise
-  sigma_noise_min: 0.15
-  sigma_noise_max: 1.00
+  # Bruit: gaussien uniquement
+  sigma_noise_min: 0.10
+  sigma_noise_max: 0.30
 
-  impulsive_prob_min: 0.05
-  impulsive_prob_max: 0.20
+  impulsive_prob_min: 0.0
+  impulsive_prob_max: 0.0
   impulsive_amp_min: 1.0
-  impulsive_amp_max: 5.0
+  impulsive_amp_max: 1.0
 
-  # Normalization
   do_standardize: true
-
-  # Reproducibility
   seed: 0
 
-# Metadata used by models
 d: 512

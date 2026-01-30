@@ -9,10 +9,7 @@ import torch.nn.functional as F
 
 from .wavelet_1d import haar_lowpass_reconstruct
 
-# ============================================================
 # 1) Backbone: simple Residual MLP (vector-to-vector)
-# ============================================================
-
 class ResidualMLPBlock(nn.Module):
     """
     Residual block on vectors: x -> x + g(LN(x))
@@ -50,8 +47,6 @@ class MLPResNet(nn.Module):
     ):
         super().__init__()
         if input_dim != output_dim:
-            # Keeping it explicit: this project uses denoising (same dimensionality)
-            # If later you want different dims, remove this guard.
             raise ValueError(f"MLPResNet expects input_dim == output_dim, got {input_dim} != {output_dim}")
 
         self.L = int(input_dim)
@@ -74,10 +69,8 @@ class MLPResNet(nn.Module):
         return self.head(h)
 
 
-# ============================================================
-# 2) Simple 1D preconditioners (work on (B,L) or (L,))
-# ============================================================
 
+# 2) Simple 1D preconditioners (work on (B,L) or (L,))
 def moving_average_1d(y: torch.Tensor, kernel_size: int = 9) -> torch.Tensor:
     """
     Simple moving average smoothing (reflection padding).
@@ -110,10 +103,7 @@ def moving_average_1d(y: torch.Tensor, kernel_size: int = 9) -> torch.Tensor:
     return out.squeeze(0) if squeeze else out
 
 
-# ============================================================
 # 3) Denoiser operator: baseline / residual / preconditioned
-# ============================================================
-
 PrecondType = Literal["identity", "ma", "haar"]
 ModeType = Literal["baseline", "residual", "preconditioned"]
 
@@ -129,7 +119,7 @@ class DenoiserOperator(nn.Module):
         x_hat = y + f(y)
 
     - preconditioned:
-        x_hat = p(y) + f(y - p(y))
+        x_hat = p(y) + f(p(y))
 
     This matches the "learn a correction around a coarse approximation" idea.
     """
@@ -173,6 +163,6 @@ class DenoiserOperator(nn.Module):
 
         if self.mode == "preconditioned":
             p = self.P(y)
-            return p + self.net(y - p)
+            return p + self.net(y-p)
 
         raise ValueError(f"Unknown mode: {self.mode}")

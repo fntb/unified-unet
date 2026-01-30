@@ -24,12 +24,6 @@ def main(conf: DictConfig):
     torch.backends.cudnn.deterministic = True
     torch.backends.cudnn.benchmark = False
 
-    # Optional: stricter determinism (can raise errors depending on ops/backends)
-    # torch.use_deterministic_algorithms(True)
-
-    # Optional: matmul precision (not required for determinism)
-    # torch.set_float32_matmul_precision("high")
-
     print(OmegaConf.to_yaml(conf))
 
     # Build objects from Hydra

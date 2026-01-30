@@ -4,7 +4,6 @@ import re
 import pandas as pd
 import torch
 
-from pytorch_lightning import LightningModule
 from src.models.regression_model import RegressionModel
 
 

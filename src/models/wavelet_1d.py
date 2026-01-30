@@ -88,8 +88,6 @@ def haar_idwt_1d(a: torch.Tensor, details: List[torch.Tensor], pad_len: int = 0)
     inv_sqrt2 = 1.0 / math.sqrt(2.0)
 
     x = a
-    # details were stored from coarse to fine? we stored d1, d2, ...
-    # For inverse, we need to go from last level back to first, so reverse.
     for d in reversed(details):
         # x is approx at current level
         approx = x

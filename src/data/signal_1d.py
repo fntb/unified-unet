@@ -25,9 +25,7 @@ import pytorch_lightning as pl
 from torch.utils.data import Dataset, DataLoader
 
 
-# -------------------------
 # Configuration
-# -------------------------
 
 @dataclass(frozen=True)
 class Signal1DConfig:
@@ -282,7 +280,7 @@ def generate_pair(
 
     # Components are provided for interpretability in plots.
     # By default they are returned in the original (non-standardized) scale,
-    # while x_clean/y_noisy are returned after standardization (if enabled).
+    # while x_clean/y_noisy are returned after standardization
     components: Dict[str, torch.Tensor] = {
         "x_sines": x_sines.to(dtype=torch.float32),
         "x_steps": x_steps.to(dtype=torch.float32),
