@@ -1,18 +1,35 @@
+# conf/trainer/base.yaml
 _target_: pytorch_lightning.Trainer
-max_epochs: 300
-accelerator: "auto"
-log_every_n_steps: 15
-# precision: 16
-enable_checkpointing: True
 
-callbacks: 
-  - _target_: pytorch_lightning.callbacks.EarlyStopping
-    monitor: val_loss
-    mode: "min"
-    patience: 15
+max_epochs: 15
+accelerator: "auto"
+log_every_n_steps: 10
+
+# Validation cadence
+check_val_every_n_epoch: 1
+limit_val_batches: 1.0
+
+# Reproducibility
+deterministic: true
+benchmark: false
+
+enable_checkpointing: True
+enable_progress_bar: true
+
+callbacks:
   - _target_: pytorch_lightning.callbacks.ModelCheckpoint
     monitor: val_loss
     mode: "min"
     save_top_k: 1
-    dirpath: ./${output_dir}/checkpoints
-    filename: ${now:%Y-%m-%d_%H-%M-%S}-epoch={epoch}-val_loss={val_loss:.4f}
+
+    # IMPORTANT: one subfolder per run/output_id
+    dirpath: ./${output_dir}/checkpoints/${output_id}
+
+    # Explicit filename (also includes output_id for clarity)
+    filename: ${output_id}-epoch={epoch}-val_loss={val_loss:.4f}
+
+  - _target_: pytorch_lightning.callbacks.EarlyStopping
+    monitor: val_loss
+    mode: "min"
+    patience: 3
+
