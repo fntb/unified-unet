@@ -1,28 +1,98 @@
+# Unified U-Net
 
-# Unified UNet
+This repository contains an **algorithmic and experimental study** of the paper  
+*A Unified Framework for U-Net Design and Analysis*  
+by Williams, Falck et al.
 
-_This is a **WIP**._
+The project was carried out in the context of a Master-level research project and focuses on **understanding, implementing, and validating** the core ideas of the unified U-Net framework through controlled experiments.
 
-An exploration of the paper _A Unified Framework for U-Net Design and Analysis, by Williams, Falck, et al._
+> Status: work in progress, but experimental results are stable and documented.
 
-We aim to implement
+---
 
-- a basic UNet for reference ;
-- a Haar Wavelet Residual UNet _which replaces the learnable encoder with a non-learnable wavelet based encoder_ ;
-- a Haar Wavelet Residual UNet on complex geometry _(e.g. a sphere rather than a 2d square image)_ ;
-- a Haar Wavelet Residual UNet with an enforced functionnal constraint _(e.g. conservation laws in weather simulation)_.
+## Project Scope
 
-Currently implemented :
+The goal of this repository is **not** to propose a new architecture, but to:
+- reformulate U-Net architectures using the unified operator-based framework introduced in the paper,
+- study the role of **multiscale structure**, **residual learning**, and **preconditioning**,
+- validate these ideas experimentally on **synthetic signals** and **standard image datasets**.
 
-- basic UNet for classification and segmentation (mnist and kvasir) ;
-- wavelet Unet for classification and segmentation (mnist and kvasir).
+The emphasis is placed on **interpretability and controlled experimentation**, rather than large-scale benchmarking.
 
-## Quick Start
+---
 
-We use the `uv` package and project manager and the `torch` - `lightning` - `hydra` framework.
+## What is implemented
 
-Run the demo with
+### Architectures
+
+- **Baseline U-Net**
+  - classical encoder–decoder architecture
+  - used as a reference model
+
+- **Residual formulation**
+  - the network learns a correction to the input signal
+  - connects U-Nets to residual networks and operator learning
+
+- **Preconditioned formulation**
+  - introduction of an explicit approximation operator $( P )$
+  - reconstruction written as:  
+    $$[\hat{x} = P(y) + f_\theta(y)]$$
+  - interpretation aligned with the unified U-Net framework
+
+- **Haar wavelet preconditioning**
+  - fixed (non-learnable) Haar-based multiscale approximation
+  - explicit separation between coarse approximation and learned correction
+  - direct link with multiresolution analysis discussed in the paper
+
+---
+
+### Data and tasks
+
+- **Synthetic 1D signals**
+  - controlled construction of signals combining:
+    - smooth low-frequency components,
+    - intermediate oscillations,
+    - localized events (spikes),
+  - supervised denoising task,
+  - frequency-based error analysis (low vs high frequencies).
+
+- **Image datasets**
+  - MNIST (classification / reconstruction)
+  - Kvasir (medical image segmentation)
+
+These datasets are used to verify that the observed mechanisms generalize beyond toy examples.
+
+---
+
+## Experimental focus
+
+The experiments are designed to isolate and study:
+- the effect of residual learning,
+- the impact of explicit preconditioning,
+- the role of multiscale structure induced by Haar decompositions.
+
+Evaluation includes:
+- training and validation dynamics,
+- reconstruction quality,
+- frequency-domain error analysis (for synthetic signals).
+
+All experiments are run with **controlled settings and fixed random seeds** to ensure reproducibility.
+
+---
+
+## Technical stack
+
+- Python
+- PyTorch
+- PyTorch Lightning
+- Hydra
+- `uv` for environment and dependency management
+
+---
+
+## Quick start
+
+Run an experiment using:
 
 ```bash
 uv run src/main.py
-```
